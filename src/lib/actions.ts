@@ -133,9 +133,10 @@ export async function updateCartItemQuantity(input: z.infer<typeof updateCartIte
         const cart = await getCart();
         
         if (quantity === 0) {
-            const newCart = cart.filter(i => i.id !== id);
-            cart.length = 0;
-            Array.prototype.push.apply(cart, newCart);
+            const index = cart.findIndex(i => i.id === id);
+            if (index !== -1) {
+                cart.splice(index, 1);
+            }
         } else {
             const item = cart.find(i => i.id === id);
             if (item) {
@@ -160,10 +161,11 @@ export async function removeFromCart(input: z.infer<typeof removeFromCartSchema>
     try {
         const { id } = removeFromCartSchema.parse(input);
         const cart = await getCart();
-        const newCart = cart.filter(i => i.id !== id);
+        const index = cart.findIndex(i => i.id === id);
         
-        cart.length = 0;
-        Array.prototype.push.apply(cart, newCart);
+        if (index !== -1) {
+            cart.splice(index, 1);
+        }
         
         revalidateTag('cart');
         return { success: true };

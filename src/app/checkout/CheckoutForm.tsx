@@ -12,6 +12,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Loader2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 type CartItem = {
     id: string;
@@ -31,6 +32,7 @@ const formSchema = z.object({
 export default function CheckoutForm({ cartItems }: { cartItems: CartItem[] }) {
     const [isPending, startTransition] = useTransition();
     const { toast } = useToast();
+    const router = useRouter();
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -50,6 +52,12 @@ export default function CheckoutForm({ cartItems }: { cartItems: CartItem[] }) {
                     title: 'Error',
                     description: result.error,
                 });
+            } else {
+               // Redirect is handled by the server action
+               toast({
+                   title: 'Order Placed!',
+                   description: 'You will be redirected shortly.'
+               })
             }
         });
     }
