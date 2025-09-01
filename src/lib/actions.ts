@@ -3,7 +3,8 @@
 import { suggestRecipe, type SuggestRecipeInput } from '@/ai/flows/recipe-suggestion';
 import { suggestSpecials } from '@/ai/flows/specials-suggestion';
 import { z } from 'zod';
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
+import { unstable_cache as cache } from 'next/cache';
 
 const recipeActionSchema = z.object({
   dietaryRequirements: z.string(),
@@ -74,9 +75,16 @@ type CartItem = {
   imageHint: string;
 };
 
-// In a real app, this would be a database or a user-specific session.
-// For this prototype, we'll use a simple in-memory store.
-let cart: CartItem[] = [];
+// We use Next.js's caching mechanism to store the cart.
+const getCart = cache(
+  async () => [] as CartItem[],
+  ['cart'],
+  { tags: ['cart'] }
+)
+
+export async function getCartItems(): Promise<CartItem[]> {
+  return await getCart();
+}
 
 const addToCartActionSchema = z.object({
     name: z.string(),
@@ -89,6 +97,7 @@ export async function addToCart(input: z.infer<typeof addToCartActionSchema>) {
     try {
         const validatedInput = addToCartActionSchema.parse(input);
         const price = parseFloat(validatedInput.price);
+        const cart = await getCart();
         const existingItem = cart.find(item => item.name === validatedInput.name);
 
         if (existingItem) {
@@ -103,19 +112,14 @@ export async function addToCart(input: z.infer<typeof addToCartActionSchema>) {
                 imageHint: validatedInput.imageHint,
             });
         }
-        revalidatePath('/cart');
-        return { success: true, cart };
+        revalidateTag('cart');
+        return { success: true };
     } catch (error) {
         console.error('Error in addToCart action:', error);
         return { success: false, error: 'Could not add item to cart.' };
     }
 }
 
-export async function getCartItems(): Promise<CartItem[]> {
-    // This is purposefully not a database call to keep the example simple.
-    // In a real app, you would fetch this from a database.
-    return JSON.parse(JSON.stringify(cart));
-}
 
 const updateCartItemQuantitySchema = z.object({
     id: z.string(),
@@ -125,16 +129,20 @@ const updateCartItemQuantitySchema = z.object({
 export async function updateCartItemQuantity(input: z.infer<typeof updateCartItemQuantitySchema>) {
     try {
         const { id, quantity } = updateCartItemQuantitySchema.parse(input);
+        let cart = await getCart();
         
         if (quantity === 0) {
-            cart = cart.filter(i => i.id !== id);
+            const newCart = cart.filter(i => i.id !== id);
+            // This is a workaround to update the cache
+            cart.length = 0;
+            Array.prototype.push.apply(cart, newCart);
         } else {
             const item = cart.find(i => i.id === id);
             if (item) {
                 item.quantity = quantity;
             }
         }
-        revalidatePath('/cart');
+        revalidateTag('cart');
         return { success: true };
     } catch (error) {
         console.error('Error updating cart item quantity:', error);
@@ -149,8 +157,14 @@ const removeFromCartSchema = z.object({
 export async function removeFromCart(input: z.infer<typeof removeFromCartSchema>) {
     try {
         const { id } = removeFromCartSchema.parse(input);
-        cart = cart.filter(i => i.id !== id);
-        revalidatePath('/cart');
+        let cart = await getCart();
+        const newCart = cart.filter(i => i.id !== id);
+        
+        // This is a workaround to update the cache
+        cart.length = 0;
+        Array.prototype.push.apply(cart, newCart);
+        
+        revalidateTag('cart');
         return { success: true };
     } catch (error) {
         console.error('Error removing from cart:', error);
