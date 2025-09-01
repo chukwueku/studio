@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { Minus, Plus, Trash2, Loader2 } from "lucide-react";
-import { useState, useTransition } from "react";
+import { useTransition } from "react";
 import { updateCartItemQuantity, removeFromCart } from "@/lib/actions";
 import { useToast } from "@/hooks/use-toast";
 
@@ -22,7 +22,6 @@ export default function CartItemCard({ item }: { item: CartItem }) {
     const { toast } = useToast();
 
     const handleQuantityChange = (newQuantity: number) => {
-        if (newQuantity < 1) return;
         startTransition(async () => {
             const { error } = await updateCartItemQuantity({ id: item.id, quantity: newQuantity }) as any;
             if (error) {
@@ -43,9 +42,9 @@ export default function CartItemCard({ item }: { item: CartItem }) {
     };
 
     return (
-        <Card className="flex items-center p-4">
+        <Card className="flex items-center p-4 relative">
             {isPending && (
-                <div className="absolute inset-0 bg-background/50 flex items-center justify-center">
+                <div className="absolute inset-0 bg-background/50 flex items-center justify-center rounded-lg">
                     <Loader2 className="h-8 w-8 animate-spin text-primary" />
                 </div>
             )}

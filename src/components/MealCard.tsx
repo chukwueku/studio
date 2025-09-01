@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Loader2, ShoppingCart } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useTransition } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { addToCart } from '@/lib/actions';
 
@@ -21,31 +21,31 @@ type MealCardProps = {
 };
 
 export default function MealCard({ meal }: MealCardProps) {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
 
   const handleAddToCart = async () => {
-    setIsLoading(true);
-    try {
-      await addToCart({ 
+    startTransition(async () => {
+      const result = await addToCart({ 
         name: meal.name, 
         price: meal.price,
         imageUrl: meal.imageUrl,
         imageHint: meal.imageHint,
       });
-      toast({
-        title: 'Added to Cart',
-        description: `${meal.name} has been added to your cart.`,
-      });
-    } catch (error) {
-      toast({
-        variant: 'destructive',
-        title: 'Uh oh!',
-        description: 'Could not add item to cart. Please try again.',
-      });
-    } finally {
-      setIsLoading(false);
-    }
+
+      if (result?.error) {
+        toast({
+          variant: 'destructive',
+          title: 'Uh oh!',
+          description: result.error,
+        });
+      } else {
+        toast({
+          title: 'Added to Cart',
+          description: `${meal.name} has been added to your cart.`,
+        });
+      }
+    });
   };
 
   return (
@@ -67,8 +67,8 @@ export default function MealCard({ meal }: MealCardProps) {
       </CardContent>
       <CardFooter className="flex justify-between items-center p-6 pt-0">
         <p className="text-xl font-bold text-primary">${meal.price}</p>
-        <Button onClick={handleAddToCart} disabled={isLoading}>
-          {isLoading ? (
+        <Button onClick={handleAddToCart} disabled={isPending}>
+          {isPending ? (
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
           ) : (
             <ShoppingCart className="mr-2 h-4 w-4" />

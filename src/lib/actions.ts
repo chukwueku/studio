@@ -81,8 +81,8 @@ let cart: CartItem[] = [];
 const addToCartActionSchema = z.object({
     name: z.string(),
     price: z.string(),
-    imageUrl: z.string().optional(),
-    imageHint: z.string().optional(),
+    imageUrl: z.string(),
+    imageHint: z.string(),
 });
 
 export async function addToCart(input: z.infer<typeof addToCartActionSchema>) {
@@ -99,39 +99,46 @@ export async function addToCart(input: z.infer<typeof addToCartActionSchema>) {
                 name: validatedInput.name,
                 price: price,
                 quantity: 1,
-                imageUrl: validatedInput.imageUrl || `https://picsum.photos/100/100?q=${validatedInput.name}`,
-                imageHint: validatedInput.imageHint || validatedInput.name.toLowerCase().split(' ').slice(0,2).join(' '),
+                imageUrl: validatedInput.imageUrl,
+                imageHint: validatedInput.imageHint,
             });
         }
         revalidatePath('/cart');
         return { success: true, cart };
     } catch (error) {
         console.error('Error in addToCart action:', error);
-        throw new Error('Could not add item to cart.');
+        return { success: false, error: 'Could not add item to cart.' };
     }
 }
 
 export async function getCartItems(): Promise<CartItem[]> {
-    return Promise.resolve(cart);
+    // This is purposefully not a database call to keep the example simple.
+    // In a real app, you would fetch this from a database.
+    return JSON.parse(JSON.stringify(cart));
 }
 
 const updateCartItemQuantitySchema = z.object({
     id: z.string(),
-    quantity: z.number().min(1),
+    quantity: z.number().min(0),
 });
 
 export async function updateCartItemQuantity(input: z.infer<typeof updateCartItemQuantitySchema>) {
     try {
         const { id, quantity } = updateCartItemQuantitySchema.parse(input);
-        const item = cart.find(i => i.id === id);
-        if (item) {
-            item.quantity = quantity;
+        
+        if (quantity === 0) {
+            cart = cart.filter(i => i.id !== id);
+        } else {
+            const item = cart.find(i => i.id === id);
+            if (item) {
+                item.quantity = quantity;
+            }
         }
         revalidatePath('/cart');
         return { success: true };
     } catch (error) {
         console.error('Error updating cart item quantity:', error);
-        throw new Error('Could not update cart item.');
+        return { success: false, error: 'Could not update cart item.' };
     }
 }
 
@@ -147,6 +154,6 @@ export async function removeFromCart(input: z.infer<typeof removeFromCartSchema>
         return { success: true };
     } catch (error) {
         console.error('Error removing from cart:', error);
-        throw new Error('Could not remove item from cart.');
+        return { success: false, error: 'Could not remove item from cart.' };
     }
 }

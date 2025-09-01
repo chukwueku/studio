@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useTransition } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { addToCart } from '@/lib/actions';
 import { Button } from './ui/button';
@@ -14,31 +14,30 @@ type AddToCartButtonProps = {
 };
 
 export default function AddToCartButton({ name, price, imageUrl, imageHint }: AddToCartButtonProps) {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
 
   const handleAddToCart = async () => {
-    setIsLoading(true);
-    try {
-      await addToCart({ name, price, imageUrl, imageHint });
-      toast({
-        title: 'Added to Cart',
-        description: `${name} has been added to your cart.`,
-      });
-    } catch (error) {
-      toast({
-        variant: 'destructive',
-        title: 'Uh oh!',
-        description: 'Could not add item to cart. Please try again.',
-      });
-    } finally {
-      setIsLoading(false);
-    }
+    startTransition(async () => {
+      const result = await addToCart({ name, price, imageUrl, imageHint });
+      if (result.error) {
+        toast({
+          variant: 'destructive',
+          title: 'Uh oh!',
+          description: result.error,
+        });
+      } else {
+        toast({
+          title: 'Added to Cart',
+          description: `${name} has been added to your cart.`,
+        });
+      }
+    });
   };
 
   return (
-    <Button onClick={handleAddToCart} disabled={isLoading}>
-      {isLoading ? (
+    <Button onClick={handleAddToCart} disabled={isPending}>
+      {isPending ? (
         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
       ) : (
         <ShoppingCart className="mr-2 h-4 w-4" />
