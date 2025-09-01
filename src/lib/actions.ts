@@ -214,7 +214,7 @@ export async function placeOrder(input: unknown) {
         const orders = await getOrdersCache();
         const newOrder: Order = {
             id: (orders.length + 10001).toString(),
-            date: new Date().toISOString().split('T')[0],
+            date: new Date().toISOString(),
             total: total,
             status: 'Processing',
             items: [...cart],

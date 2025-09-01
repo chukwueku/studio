@@ -51,7 +51,7 @@ export default async function ProfilePage() {
                 <CardContent>
                     <div className="space-y-4">
                         {pastOrders.length > 0 ? (
-                            pastOrders.map((order) => (
+                            pastOrders.map((order, index) => (
                                 <div key={order.id}>
                                     <div className="flex justify-between items-center">
                                         <div>
@@ -73,7 +73,7 @@ export default async function ProfilePage() {
                                             ))}
                                         </ul>
                                     </div>
-                                    <Separator />
+                                    {index < pastOrders.length -1 && <Separator />}
                                 </div>
                             ))
                         ) : (
