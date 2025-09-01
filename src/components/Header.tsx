@@ -3,13 +3,13 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { ChefHat, Menu, ShoppingCart } from "lucide-react";
+import { ChefHat, Menu, ShoppingCart, Sparkles } from "lucide-react";
 import { useState } from "react";
 
 const navLinks = [
   { href: "/", label: "Home" },
   { href: "/menu", label: "Menu" },
-  { href: "#featured", label: "Featured" },
+  { href: "/specials", label: "Specials", icon: <Sparkles className="mr-2 h-4 w-4 text-primary" /> },
   { href: "#contact", label: "Contact" },
 ];
 
@@ -23,13 +23,14 @@ export default function Header() {
           <ChefHat className="h-8 w-8 text-primary" />
           <span className="text-xl font-bold font-headline">David's Dishes</span>
         </Link>
-        <nav className="hidden md:flex gap-6">
+        <nav className="hidden md:flex gap-6 items-center">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className="text-sm font-medium transition-colors hover:text-primary"
+              className="flex items-center text-sm font-medium transition-colors hover:text-primary"
             >
+              {link.icon}
               {link.label}
             </Link>
           ))}
@@ -53,16 +54,19 @@ export default function Header() {
             </SheetTrigger>
             <SheetContent side="right">
               <SheetHeader>
-                <SheetTitle className="sr-only">Mobile Menu</SheetTitle>
+                <SheetTitle>
+                  Mobile Menu
+                </SheetTitle>
               </SheetHeader>
               <nav className="grid gap-6 text-lg font-medium mt-8">
                 {navLinks.map((link) => (
                   <Link
                     key={link.href}
                     href={link.href}
-                    className="transition-colors hover:text-primary"
+                    className="flex items-center transition-colors hover:text-primary"
                     onClick={() => setIsSheetOpen(false)}
                   >
+                    {link.icon}
                     {link.label}
                   </Link>
                 ))}
