@@ -56,14 +56,24 @@ export default async function ProfilePage() {
                                     <div className="flex justify-between items-center">
                                         <div>
                                             <p className="font-bold">Order #{order.id}</p>
-                                            <p className="text-sm text-muted-foreground">{order.date}</p>
+                                            <p className="text-sm text-muted-foreground">{new Date(order.date).toLocaleDateString()}</p>
                                         </div>
                                         <div className="text-right">
                                             <p className="font-bold">${order.total.toFixed(2)}</p>
                                             <p className={`text-sm font-medium ${order.status === 'Delivered' ? 'text-green-600' : 'text-yellow-600'}`}>{order.status}</p>
                                         </div>
                                     </div>
-                                    <Separator className="my-4" />
+                                    <div className="my-4">
+                                        <ul className="text-sm text-muted-foreground space-y-1 pl-4">
+                                            {order.items.map(item => (
+                                                <li key={item.id} className="flex justify-between">
+                                                   <span>{item.name} x {item.quantity}</span>
+                                                   <span>${(item.price * item.quantity).toFixed(2)}</span>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                    <Separator />
                                 </div>
                             ))
                         ) : (
