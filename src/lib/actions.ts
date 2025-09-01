@@ -132,10 +132,7 @@ export async function updateCartItemQuantity(input: z.infer<typeof updateCartIte
         let cart = await getCart();
         
         if (quantity === 0) {
-            const newCart = cart.filter(i => i.id !== id);
-            // This is a workaround to update the cache
-            cart.length = 0;
-            Array.prototype.push.apply(cart, newCart);
+            cart = cart.filter(i => i.id !== id);
         } else {
             const item = cart.find(i => i.id === id);
             if (item) {
