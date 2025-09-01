@@ -27,7 +27,12 @@ export default function MealCard({ meal }: MealCardProps) {
   const handleAddToCart = async () => {
     setIsLoading(true);
     try {
-      await addToCart({ name: meal.name, price: meal.price });
+      await addToCart({ 
+        name: meal.name, 
+        price: meal.price,
+        imageUrl: meal.imageUrl,
+        imageHint: meal.imageHint,
+      });
       toast({
         title: 'Added to Cart',
         description: `${meal.name} has been added to your cart.`,

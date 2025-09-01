@@ -9,16 +9,18 @@ import { Loader2, ShoppingCart } from 'lucide-react';
 type AddToCartButtonProps = {
   name: string;
   price: string;
+  imageUrl: string;
+  imageHint: string;
 };
 
-export default function AddToCartButton({ name, price }: AddToCartButtonProps) {
+export default function AddToCartButton({ name, price, imageUrl, imageHint }: AddToCartButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
   const handleAddToCart = async () => {
     setIsLoading(true);
     try {
-      await addToCart({ name, price });
+      await addToCart({ name, price, imageUrl, imageHint });
       toast({
         title: 'Added to Cart',
         description: `${name} has been added to your cart.`,

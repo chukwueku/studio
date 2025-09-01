@@ -52,7 +52,7 @@ export default async function SpecialsPage() {
                                 <p className="text-2xl font-bold text-primary">${special.price}</p>
                                 <p className="text-md font-medium text-muted-foreground line-through">${special.originalPrice}</p>
                             </div>
-                            <AddToCartButton name={special.name} price={special.price} />
+                            <AddToCartButton name={special.name} price={special.price} imageUrl={special.imageUrl} imageHint={special.imageHint} />
                         </div>
                     </Card>
                 ))}
