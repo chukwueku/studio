@@ -4,9 +4,10 @@ import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Loader2, ShoppingCart } from 'lucide-react';
-import { useState, useTransition } from 'react';
+import { useTransition } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { addToCart } from '@/lib/actions';
+import { Badge } from './ui/badge';
 
 type Meal = {
   name: string;
@@ -14,6 +15,7 @@ type Meal = {
   price: string;
   imageUrl: string;
   imageHint: string;
+  quantityInCart?: number;
 };
 
 type MealCardProps = {
@@ -50,7 +52,7 @@ export default function MealCard({ meal }: MealCardProps) {
 
   return (
     <Card className="flex flex-col overflow-hidden transition-transform duration-300 hover:scale-105 hover:shadow-xl">
-      <CardHeader className="p-0">
+      <CardHeader className="p-0 relative">
         <div className="aspect-video relative">
           <Image
             src={meal.imageUrl}
@@ -59,6 +61,11 @@ export default function MealCard({ meal }: MealCardProps) {
             fill
             className="object-cover"
           />
+           {meal.quantityInCart && meal.quantityInCart > 0 && (
+            <Badge variant="secondary" className="absolute top-2 right-2 text-lg">
+              {meal.quantityInCart}
+            </Badge>
+          )}
         </div>
       </CardHeader>
       <CardContent className="flex-grow p-6">
