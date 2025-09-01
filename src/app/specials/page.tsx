@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 import { Utensils } from "lucide-react";
 import { getSpecials } from "@/lib/actions";
+import AddToCartButton from "@/components/AddToCartButton";
 
 export type Special = {
     name: string;
@@ -51,6 +52,7 @@ export default async function SpecialsPage() {
                                 <p className="text-2xl font-bold text-primary">${special.price}</p>
                                 <p className="text-md font-medium text-muted-foreground line-through">${special.originalPrice}</p>
                             </div>
+                            <AddToCartButton name={special.name} price={special.price} />
                         </div>
                     </Card>
                 ))}

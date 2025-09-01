@@ -66,3 +66,21 @@ export async function getSpecials() {
     ];
   }
 }
+
+const addToCartActionSchema = z.object({
+    name: z.string(),
+    price: z.string(),
+});
+
+export async function addToCart(input: z.infer<typeof addToCartActionSchema>) {
+    try {
+        const validatedInput = addToCartActionSchema.parse(input);
+        // In a real app, you would add the item to a database or session.
+        // For now, we'll just log it to the console.
+        console.log(`Added to cart: ${validatedInput.name} - $${validatedInput.price}`);
+        return { success: true };
+    } catch (error) {
+        console.error('Error in addToCart action:', error);
+        throw new Error('Could not add item to cart.');
+    }
+}
