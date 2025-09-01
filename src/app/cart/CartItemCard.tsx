@@ -23,7 +23,7 @@ export default function CartItemCard({ item }: { item: CartItem }) {
 
     const handleQuantityChange = (newQuantity: number) => {
         startTransition(async () => {
-            const { error } = await updateCartItemQuantity({ id: item.id, quantity: newQuantity }) as any;
+            const { error } = await updateCartItemQuantity({ id: item.id, quantity: newQuantity });
             if (error) {
                 toast({ variant: 'destructive', title: 'Error', description: 'Failed to update quantity.'});
             }
@@ -32,7 +32,7 @@ export default function CartItemCard({ item }: { item: CartItem }) {
 
     const handleRemove = () => {
         startTransition(async () => {
-            const { error } = await removeFromCart({ id: item.id }) as any;
+            const { error } = await removeFromCart({ id: item.id });
              if (error) {
                 toast({ variant: 'destructive', title: 'Error', description: 'Failed to remove item.'});
             } else {

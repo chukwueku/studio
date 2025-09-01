@@ -3,7 +3,7 @@
 import { suggestRecipe, type SuggestRecipeInput } from '@/ai/flows/recipe-suggestion';
 import { suggestSpecials } from '@/ai/flows/specials-suggestion';
 import { z } from 'zod';
-import { revalidatePath, revalidateTag } from 'next/cache';
+import { revalidateTag } from 'next/cache';
 import { unstable_cache as cache } from 'next/cache';
 
 const recipeActionSchema = z.object({
