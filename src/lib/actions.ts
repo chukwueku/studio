@@ -5,6 +5,7 @@ import { suggestSpecials } from '@/ai/flows/specials-suggestion';
 import { z } from 'zod';
 import { revalidateTag } from 'next/cache';
 import { unstable_cache as cache } from 'next/cache';
+import { redirect } from 'next/navigation';
 
 const recipeActionSchema = z.object({
   dietaryRequirements: z.string(),
@@ -129,14 +130,18 @@ const updateCartItemQuantitySchema = z.object({
 export async function updateCartItemQuantity(input: z.infer<typeof updateCartItemQuantitySchema>) {
     try {
         const { id, quantity } = updateCartItemQuantitySchema.parse(input);
-        let cart = await getCart();
+        const cart = await getCart();
         
         if (quantity === 0) {
-            cart = cart.filter(i => i.id !== id);
+            const newCart = cart.filter(i => i.id !== id);
+            cart.length = 0;
+            Array.prototype.push.apply(cart, newCart);
         } else {
             const item = cart.find(i => i.id === id);
             if (item) {
                 item.quantity = quantity;
+            } else {
+              return { success: false, error: 'Item not found in cart.' };
             }
         }
         revalidateTag('cart');
@@ -154,10 +159,9 @@ const removeFromCartSchema = z.object({
 export async function removeFromCart(input: z.infer<typeof removeFromCartSchema>) {
     try {
         const { id } = removeFromCartSchema.parse(input);
-        let cart = await getCart();
+        const cart = await getCart();
         const newCart = cart.filter(i => i.id !== id);
         
-        // This is a workaround to update the cache
         cart.length = 0;
         Array.prototype.push.apply(cart, newCart);
         
@@ -167,4 +171,71 @@ export async function removeFromCart(input: z.infer<typeof removeFromCartSchema>
         console.error('Error removing from cart:', error);
         return { success: false, error: 'Could not remove item from cart.' };
     }
+}
+
+type Order = {
+    id: string;
+    date: string;
+    total: number;
+    status: 'Processing' | 'Delivered';
+    items: CartItem[];
+};
+
+const getOrdersCache = cache(
+    async () => [] as Order[],
+    ['orders'],
+    { tags: ['orders'] }
+);
+
+export async function getOrders(): Promise<Order[]> {
+    return await getOrdersCache();
+}
+
+const placeOrderSchema = z.object({
+    name: z.string().min(1, 'Name is required'),
+    email: z.string().email('Invalid email address'),
+    address: z.string().min(1, 'Address is required'),
+    cartItems: z.array(z.any()),
+});
+
+
+export async function placeOrder(input: unknown) {
+    try {
+        const validatedInput = placeOrderSchema.parse(input);
+        const cart = await getCart();
+        if (cart.length === 0) {
+            return { success: false, error: "Your cart is empty." };
+        }
+
+        const subtotal = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
+        const tax = subtotal * 0.08;
+        const total = subtotal + tax;
+
+        const orders = await getOrdersCache();
+        const newOrder: Order = {
+            id: (orders.length + 10001).toString(),
+            date: new Date().toISOString().split('T')[0],
+            total: total,
+            status: 'Processing',
+            items: [...cart],
+        };
+        
+        orders.unshift(newOrder); // Add to beginning
+        
+        // Clear cart
+        cart.length = 0;
+        
+        revalidateTag('cart');
+        revalidateTag('orders');
+
+    } catch(error) {
+        console.error('Error placing order:', error);
+        if (error instanceof z.ZodError) {
+          return { success: false, error: error.errors.map(e => e.message).join(', ') };
+        }
+        return { success: false, error: "Could not place order." };
+    }
+
+    // Redirect to a success page
+    redirect('/order/success');
 }

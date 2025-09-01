@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import Link from "next/link";
 
 type OrderSummaryProps = {
     subtotal: number;
@@ -28,7 +29,9 @@ export default function OrderSummary({ subtotal, tax, total }: OrderSummaryProps
                     <span>Total</span>
                     <span>${total.toFixed(2)}</span>
                 </div>
-                <Button className="w-full mt-4">Proceed to Checkout</Button>
+                <Button className="w-full mt-4" asChild>
+                    <Link href="/checkout">Proceed to Checkout</Link>
+                </Button>
             </CardContent>
         </Card>
     );
