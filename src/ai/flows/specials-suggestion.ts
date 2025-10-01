@@ -13,7 +13,7 @@ const SpecialSchema = z.object({
     description: z.string().describe('A brief, enticing description of the meal.'),
     price: z.string().describe("The special price of the meal as a string, e.g., '18.00'."),
     originalPrice: z.string().describe("The original price of the meal as a string, e.g., '22.00'."),
-    imageUrl: z.string().url().describe("A placeholder image URL for the meal. Should be in the format https://picsum.photos/600/400."),
+    imageUrl: z.string().url().describe("A placeholder image URL for the meal. Should be in the format https://picsum.photos/seed/your-seed/600/400."),
     imageHint: z.string().describe("One or two keywords for the meal image, e.g., 'jollof chicken'."),
     tag: z.string().describe("A short tag for the special, e.g., 'Today's Deal' or 'Family Combo'."),
 });
@@ -37,7 +37,7 @@ Please generate 3 creative and appealing daily specials based on the menu. For e
 - A creative name.
 - An enticing description.
 - A special price and an original price. The special price should be lower.
-- A placeholder image URL from picsum.photos (600x400).
+- A placeholder image URL from picsum.photos using a unique seed for each meal (e.g., https://picsum.photos/seed/jollof-combo/600/400).
 - A 1-2 word hint for the image.
 - A short tag (e.g., "Today's Special", "Family Deal", "Lunch Only").
 

@@ -13,7 +13,7 @@ const featuredMeals = [
     name: 'Jollof Rice Fiesta',
     description: 'A classic West African dish, our Jollof is made with long-grain rice, tomatoes, onions, spices, and your choice of protein.',
     price: '15.99',
-    imageUrl: 'https://picsum.photos/600/400',
+    imageUrl: 'https://picsum.photos/seed/jollof-rice/600/400',
     imageHint: 'jollof rice',
     category: 'Rice',
   },
@@ -21,7 +21,7 @@ const featuredMeals = [
     name: 'Egusi Soup Delight',
     description: 'A rich and savory soup made from ground melon seeds, leafy vegetables, and a blend of traditional spices.',
     price: '18.50',
-    imageUrl: 'https://picsum.photos/600/400',
+    imageUrl: 'https://picsum.photos/seed/egusi-soup/600/400',
     imageHint: 'egusi soup',
     category: 'Soups',
   },
@@ -29,7 +29,7 @@ const featuredMeals = [
     name: 'Spicy Beef Suya',
     description: 'Grilled skewers of beef, marinated in a spicy peanut and ginger blend. A popular Nigerian street food snack.',
     price: '12.00',
-    imageUrl: 'https://picsum.photos/600/400',
+    imageUrl: 'https://picsum.photos/seed/beef-suya/600/400',
     imageHint: 'beef suya',
     category: 'Snacks',
   },
@@ -47,7 +47,7 @@ export default function Home() {
     <div className="flex flex-col min-h-[100dvh]">
       <section className="relative w-full h-[60vh] md:h-[80vh]">
         <Image
-          src="https://picsum.photos/1920/1080"
+          src="https://picsum.photos/seed/food-spread/1920/1080"
           alt="A spread of delicious food"
           data-ai-hint="food spread"
           fill
