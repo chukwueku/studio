@@ -1,0 +1,30 @@
+{
+  "food-spread": {
+    "url": "https://picsum.photos/seed/food-spread/1920/1080",
+    "hint": "food spread"
+  },
+  "jollof-rice": {
+    "url": "https://picsum.photos/seed/jollof-rice/600/400",
+    "hint": "jollof rice"
+  },
+  "egusi-soup": {
+    "url": "https://picsum.photos/seed/egusi-soup/600/400",
+    "hint": "egusi soup"
+  },
+  "beef-suya": {
+    "url": "https://picsum.photos/seed/beef-suya/600/400",
+    "hint": "beef suya"
+  },
+  "plantain": {
+    "url": "https://picsum.photos/seed/plantain/600/400",
+    "hint": "fried plantain"
+  },
+  "zobo-drink": {
+    "url": "https://picsum.photos/seed/zobo-drink/600/400",
+    "hint": "hibiscus drink"
+  },
+  "okra-soup": {
+    "url": "https://picsum.photos/seed/okra-soup/600/400",
+    "hint": "okra soup"
+  }
+}

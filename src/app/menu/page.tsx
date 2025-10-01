@@ -1,5 +1,6 @@
 import MealCard from "@/components/MealCard";
 import { getCartItems } from "@/lib/actions";
+import images from '@/lib/placeholder-images.json';
 
 const menuItems = [
     {
@@ -7,8 +8,8 @@ const menuItems = [
       name: 'Jollof Rice Fiesta',
       description: 'A classic West African dish, our Jollof is made with long-grain rice, tomatoes, onions, spices, and your choice of protein.',
       price: '15.99',
-      imageUrl: 'https://picsum.photos/seed/jollof-rice/600/400',
-      imageHint: 'jollof rice',
+      imageUrl: images['jollof-rice'].url,
+      imageHint: images['jollof-rice'].hint,
       category: 'Rice',
     },
     {
@@ -16,8 +17,8 @@ const menuItems = [
       name: 'Egusi Soup Delight',
       description: 'A rich and savory soup made from ground melon seeds, leafy vegetables, and a blend of traditional spices.',
       price: '18.50',
-      imageUrl: 'https://picsum.photos/seed/egusi-soup/600/400',
-      imageHint: 'egusi soup',
+      imageUrl: images['egusi-soup'].url,
+      imageHint: images['egusi-soup'].hint,
       category: 'Soups',
     },
     {
@@ -25,8 +26,8 @@ const menuItems = [
       name: 'Spicy Beef Suya',
       description: 'Grilled skewers of beef, marinated in a spicy peanut and ginger blend. A popular Nigerian street food snack.',
       price: '12.00',
-      imageUrl: 'https://picsum.photos/seed/beef-suya/600/400',
-      imageHint: 'beef suya',
+      imageUrl: images['beef-suya'].url,
+      imageHint: images['beef-suya'].hint,
       category: 'Snacks',
     },
     {
@@ -34,8 +35,8 @@ const menuItems = [
         name: 'Plantain Medley',
         description: 'Sweet, ripe plantains fried to golden perfection. A perfect side or a delicious snack on its own.',
         price: '7.50',
-        imageUrl: 'https://picsum.photos/seed/plantain/600/400',
-        imageHint: 'fried plantain',
+        imageUrl: images['plantain'].url,
+        imageHint: images['plantain'].hint,
         category: 'Snacks',
     },
     {
@@ -43,8 +44,8 @@ const menuItems = [
         name: 'Zobo Drink',
         description: 'A refreshing hibiscus iced tea, infused with ginger and pineapple for a sweet and tangy flavor.',
         price: '4.00',
-        imageUrl: 'https://picsum.photos/seed/zobo-drink/600/400',
-        imageHint: 'hibiscus drink',
+        imageUrl: images['zobo-drink'].url,
+        imageHint: images['zobo-drink'].hint,
         category: 'Drinks',
     },
     {
@@ -52,8 +53,8 @@ const menuItems = [
         name: 'Okra Soup',
         description: 'A flavorful and mucilaginous soup made with fresh okra, fish, and assorted meats.',
         price: '17.00',
-        imageUrl: 'https://picsum.photos/seed/okra-soup/600/400',
-        imageHint: 'okra soup',
+        imageUrl: images['okra-soup'].url,
+        imageHint: images['okra-soup'].hint,
         category: 'Soups',
     },
   ];

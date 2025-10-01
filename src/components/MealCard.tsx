@@ -10,6 +10,7 @@ import { addToCart } from '@/lib/actions';
 import { Badge } from './ui/badge';
 
 type Meal = {
+  id: string;
   name: string;
   description: string;
   price: string;
